@@ -7,10 +7,13 @@ import com.literalura.literalura.service.DataConverter;
 import com.literalura.literalura.service.IDataConverter;
 
 import java.util.Comparator;
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Scanner;
 
 public class MainClass {
 
+    private Scanner scanner = new Scanner(System.in);
     private APIUsage apiUsage = new APIUsage();
     private IDataConverter dataConverter = new DataConverter();
 
@@ -22,14 +25,24 @@ public class MainClass {
 
         int option = 0;
 
+
         while(true){
             System.out.println("""
+                    Select an option:
                     1. Top 10 most downloaded books
                     """);
+            try{
+                option = scanner.nextInt();
+            }catch (InputMismatchException e){
+                System.out.println(e.getMessage());
+                menu();
+            }
+
 
             switch (option) {
                 case 1:
                     top10BooksByDownloadCount();
+                    break;
             }
 
             if (option == 77){
@@ -46,7 +59,7 @@ public class MainClass {
         result.stream().
                 sorted(Comparator.comparing(BookData::downloadCount))
                 .limit(10)
-                .forEach(l -> System.out.println("Title: " + l.title() + "\nAuthors: "
+                .forEach(l -> System.out.println("\nTitle: " + l.title() + "\nAuthors: "
                         + l.authors().toString() + "\nSubjects: " + l.subjects().toString()
                         + "\nDownload count: " + l.downloadCount()));
     }
